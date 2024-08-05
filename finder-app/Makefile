@@ -1,23 +1,14 @@
-CC=gcc
-CFLAGS= -Wall -Wextra -Werror
+CC=$(CROSS_COMPILE)gcc
+CFLAGS=-g
+OBJ=writer.o
 
-TARGET=writer
-OBJS=writer.o 
+writer: $(OBJ)
+	$(CC) -o $@ $^
 
-ifdef CROSS_COMPILE
-	CC=$(CROSS_COMPILE)gcc 
-endif
+%.o: %.c
+	$(CC) -c -o $@ $< $(CFLAGS)
 
-all: $(TARGET)
-
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
-
-%.o: %.c 
-	$(CC) $(CFLAGS) -c $< -o $@
+.PHONY: clean
 
 clean:
-	rm -f $(TARGET) $(OBJS)
-
-.PHONY:
-	all clean 
+	rm -f $(OBJ) writer
